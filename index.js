@@ -3,6 +3,8 @@ var path = require('path')
 var readline = require('readline')
 var acceptableExtensions = require('./lib/acceptableExtensions.json')
 var rejectNames = require('./lib/rejectNames.json')
+var rejectGames = require('./lib/rejectGames.json')
+var sortObject = require('sort-object')
 
 var lineReader = readline.createInterface({
   input: fs.createReadStream('TDC.dat')
@@ -14,17 +16,22 @@ var currentGame = ''
 lineReader.on('line', function (line) {
 	// New Game Name
 	if (line.indexOf('name "') >= 0) {
-		currentGame = cleanGameName(line)
-		// Do not add installers.
-		if (currentGame.indexOf('(Installer)') >= 0) {
-			currentGame = null
-		} else {
-			database[currentGame] = {}
+		// Deny installer, trainers or cheats runnings.
+		for (var type in rejectGames) {
+			if (line.indexOf(rejectGames[type]) > 0) {
+				currentGame = null
+				return
+			}
 		}
+
+		currentGame = cleanGameName(line)
+		database[currentGame] = {}
 	}
 	// File entry
 	else if (line.indexOf('file (') >= 0) {
+		// See if we are acting on the given game.
 		if (currentGame) {
+			// Clean up the file.
 			var file = cleanFile(line)
 			database[currentGame][file.name] = file
 		}
@@ -49,6 +56,7 @@ function acceptableFile(file) {
 }
 
 lineReader.on('close', function () {
+	database = sortObject(database)
   var pkg = require('./package.json')
   var output = `clrmamepro (
 	name "DOS"
@@ -81,11 +89,25 @@ game (
 })
 
 function cleanGameName(name) {
-	var output = name.trim()
-	output = output.replace('name "', '')
+	// Remove the prefixing "name".
+	var output = name.trim().replace('name "', '')
+
+	// Remove the suffixing file extension.
 	output = output.replace('.zip"', '')
-	// TODO: Clean the file more to match No-Intro naming.
-	return output
+
+	// Remove all [] data.
+	output = output.replace(/\[.*?\]/g, '')
+
+	// Remove the year.
+	output = output.replace(/\(\d\d\d\d\)/g, '')
+
+	// Remove all () data.
+	//output = output.replace(/\(.*?\)/g, '')
+
+    // Replace any double spaces with a single space.
+	output = output.split('  ').join(' ')
+
+	return output.trim()
 }
 
 function replaceAll(str, find, replace) {
