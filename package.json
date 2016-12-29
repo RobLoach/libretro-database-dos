@@ -1,0 +1,23 @@
+{
+  "name": "libretro-database-dos",
+  "version": "1.0.0",
+  "description": "DOS.dat for libretro-database",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "engine": ">=7",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robloach/libretro-database-dos.git"
+  },
+  "keywords": [
+    "libretro"
+  ],
+  "author": "Rob Loach (http://robloach.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robloach/libretro-database-dos/issues"
+  },
+  "homepage": "https://github.com/robloach/libretro-database-dos"
+}
