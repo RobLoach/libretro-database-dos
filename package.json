@@ -1,6 +1,6 @@
 {
   "name": "libretro-database-dos",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "DOS.dat for libretro-database",
   "main": "index.js",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/robloach/libretro-database-dos",
   "dependencies": {
-    "sort-object": "^3.0.2"
+    "robloach-datfile": "RobLoach/datfile#master",
+    "sort-array": "^1.1.1"
   }
 }
