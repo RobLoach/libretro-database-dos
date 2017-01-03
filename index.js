@@ -6,11 +6,20 @@ var rejectGames = require('./lib/rejectGames.json')
 var sortArray = require('sort-array')
 var datfile = require('robloach-datfile')
 
-datfile.parseFile('TDC.dat', {ignoreHeader: true}).then(function (dat) {
+// Options for reading the dat file.
+let opts = {
+	ignoreHeader: true
+}
+
+// Parse the TDC.dat file.
+datfile.parseFile('TDC.dat', opts).then(function (dat) {
 	let database = []
 	for (let i in dat) {
 		let game = dat[i]
 		let finalFile = null
+		if (!acceptableGame(game)) {
+			continue
+		}
 		for (let i in game.entries || []) {
 			let file = game.entries[i]
 			let cleanFilename = acceptableFile(file)
@@ -29,8 +38,10 @@ datfile.parseFile('TDC.dat', {ignoreHeader: true}).then(function (dat) {
 		}
 	}
 
+	// Sort the database.
 	database = sortArray(database, 'name')
 
+	// Output the new DAT.
 	var pkg = require('./package.json')
 	var output = `clrmamepro (
 	name "DOS"
@@ -49,11 +60,30 @@ game (
 )
 `
 	}
+
+	// Save the file.
 	fs.writeFileSync('DOS.dat', output)
 }).catch(function (err) {
+	// Output any errors.
 	console.error(err)
 })
 
+/**
+ * Checks to see if the given file is an acceptable game to index.
+ */
+function acceptableGame(game) {
+	for (let i in rejectGames) {
+		if (rejectGames[i] && game.name.indexOf(rejectGames[i]) >= 0) {
+			return false
+		}
+	}
+
+	return true
+}
+
+/**
+ * Checks if the given file is acceptable.
+ */
 function acceptableFile(file) {
 	var filename = file.name
 	filename = replaceAll(filename, '\\\\', '/')
@@ -74,6 +104,9 @@ function acceptableFile(file) {
 	return pathObject.base
 }
 
+/**
+ * Cleans the given game name.
+ */
 function cleanGameName(name) {
 	// Remove the suffixing file extension.
 	output = name.replace('.zip"', '')
@@ -105,6 +138,9 @@ function cleanGameName(name) {
 	return output.trim()
 }
 
+/**
+ * Replace all instances of a given string with another one.
+ */
 function replaceAll(str, find, replace) {
   return str.replace(new RegExp(find, 'g'), replace);
 }
