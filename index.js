@@ -111,13 +111,6 @@ function cleanGameName(name) {
 	// Remove the suffixing file extension.
 	output = name.replace('.zip"', '')
 
-	// Remove the version.
-	//var ver = output.match(/\ v[0-9.]{3,9}\ /g)
-	//if (ver && ver[0]) {
-	//	console.log(ver[0])
-	//	output = output.replace(ver[0], '')
-	//}
-
 	// Remove all [] data.
 	output = output.replace(/\[.*?\]/g, '')
 
@@ -131,6 +124,12 @@ function cleanGameName(name) {
 
 	// Remove all () data.
 	//output = output.replace(/\(.*?\)/g, '')
+
+	// Remove the version.
+	var ver = output.match(/ v[0-9.]{3,9}/g)
+	if (ver && ver[0]) {
+		output = output.replace(ver[0], '')
+	}
 
     // Replace any double spaces with a single space.
 	output = output.split('  ').join(' ')
