@@ -1,7 +1,7 @@
 clrmamepro (
 	name "DOS"
 	description "DOS"
-	version 2017.02.13
+	version 2017.2.13
 	comment "libretro | www.libretro.com"
 	homepage "https://github.com/robloach/libretro-database-dos"
 )
