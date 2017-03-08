@@ -18,6 +18,7 @@
 	"setd",
 	"browse",
 	"list",
+	"_mkonfig",
 	"chkmem",
 	"install3",
 	"xorder",
