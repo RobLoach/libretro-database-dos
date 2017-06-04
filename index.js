@@ -87,21 +87,24 @@ function acceptableGame(game) {
 function acceptableFile(file) {
 	var filename = file.name
 	filename = replaceAll(filename, '\\\\', '/')
-	var pathObject = path.parse(filename)
-	if (pathObject.dir) {
-		return false
-	}
-	var extension = pathObject.ext.toLowerCase()
-	if (acceptableExtensions.indexOf(extension) < 0) {
-		return false
-	}
+	if (filename) {
+		var pathObject = path.parse(filename)
+		if (pathObject.dir) {
+			return false
+		}
+		var extension = pathObject.ext.toLowerCase()
+		if (acceptableExtensions.indexOf(extension) < 0) {
+			return false
+		}
 
-	var name = pathObject.name.toLowerCase()
-	if (rejectNames.indexOf(name) >= 0) {
-		return false
-	}
+		var name = pathObject.name.toLowerCase()
+		if (rejectNames.indexOf(name) >= 0) {
+			return false
+		}
 
-	return pathObject.base
+		return pathObject.base
+	}
+	return false
 }
 
 /**
@@ -182,5 +185,10 @@ function cleanGameName(name) {
  * Replace all instances of a given string with another one.
  */
 function replaceAll(str, find, replace) {
-  return str.replace(new RegExp(find, 'g'), replace);
+	if (str && str.replace) {
+		return str.replace(new RegExp(find, 'g'), replace);
+	}
+	else {
+		return str
+	}
 }
