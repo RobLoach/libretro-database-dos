@@ -23,18 +23,20 @@ datfile.parseFile('TDC.dat', opts).then(function (dat) {
 		for (let i in game.entries || []) {
 			let file = game.entries[i]
 			let cleanFilename = acceptableFile(file)
-	  		if (cleanFilename) {
-	  			file.cleanFilename = cleanFilename
+			if (cleanFilename) {
+				file.cleanFilename = cleanFilename
 				finalFile = file
-	  		}
+			}
 		}
-	  	if (finalFile) {
-	  		database.push({
-	  			name: cleanGameName(game.name),
-	  			filename: finalFile.cleanFilename,
-	  			size: finalFile.size,
-	  			crc: finalFile.crc
-	  		})
+		if (finalFile) {
+			finalFile.meta = getMetadata(game)
+			database.push({
+				name: cleanGameName(game.name),
+				filename: finalFile.cleanFilename,
+				size: finalFile.size,
+				crc: finalFile.crc,
+				meta: finalFile.meta
+			})
 		}
 	}
 
@@ -51,11 +53,17 @@ datfile.parseFile('TDC.dat', opts).then(function (dat) {
 	homepage "${pkg.homepage}"
 )
 `
+
 	for (let i in database) {
 		let game = database[i]
+		let meta = ''
+		for (let metaEntry in game.meta) {
+			meta += `\n\t${metaEntry} "${game.meta[metaEntry]}"`
+		}
 		output += `
 game (
 	name "${game.name}"
+	description "${game.name}"${meta}
 	rom ( name "${game.filename}" size ${game.size} crc ${game.crc} )
 )
 `
@@ -175,10 +183,44 @@ function cleanGameName(name) {
 		output = output.replace(ver[0], '')
 	}
 
-    // Replace any double spaces with a single space.
+	// Replace any double spaces with a single space.
 	output = output.split('  ').join(' ')
 
 	return output.trim()
+}
+
+/**
+ * Retrieves any meta entries for the game.
+ */
+function getMetadata(game) {
+	let meta = {}
+	let name = game.name
+	let genres = {
+		'Action': 'Action',
+		'Adventure': 'Adventure',
+		'Strategy': 'Strategy',
+		'Sports': 'Sports',
+		'Role-Playing (RPG)': 'RPG',
+		'Educational': 'Educational',
+		'Simulation': 'Simulation',
+		'Trainer': 'Trainer'
+	}
+	for (let genre in genres) {
+		if (name.search(genre) > 3) {
+			meta.genre = genres[genre]
+			break
+		}
+	}
+
+	let currentYear = (new Date()).getFullYear()
+	for (let i = 1980; i < currentYear; i++) {
+		if (name.search('(' + i + ')') > 3) {
+			meta.year = i
+			break
+		}
+	}
+
+	return meta
 }
 
 /**
