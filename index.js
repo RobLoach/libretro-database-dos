@@ -70,7 +70,7 @@ game (
 	}
 
 	// Save the file.
-	fs.writeFileSync('DOS.dat', output)
+	fs.writeFileSync('libretro-database/dat/DOS.dat', output)
 }).catch(function (err) {
 	// Output any errors.
 	console.error(err)
