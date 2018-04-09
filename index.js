@@ -34,7 +34,7 @@ datfile.parseFile('TDC.dat', opts).then(function (dat) {
 				name: cleanGameName(game.name),
 				filename: finalFile.cleanFilename,
 				size: finalFile.size,
-				crc: finalFile.crc,
+				crc: finalFile.crc.toLowerCase(),
 				meta: finalFile.meta
 			})
 		}
