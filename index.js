@@ -41,7 +41,7 @@ datfile.parseFile('TDC.dat', opts).then(function (dat) {
 	}
 
 	// Sort the database.
-	database = sortArray(database, 'name')
+	database = sortArray(database, ['name', 'rom.crc'])
 
 	// Output the new DAT.
 	var pkg = require('./package.json')
