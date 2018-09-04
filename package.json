@@ -1,6 +1,6 @@
 {
   "name": "libretro-database-dos",
-  "version": "2018.4.9",
+  "version": "2018.8.7",
   "private": true,
   "description": "DOS.dat for libretro-database",
   "main": "index.js",
