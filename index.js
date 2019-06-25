@@ -5,47 +5,61 @@ var rejectNames = require('./lib/rejectNames.json')
 var rejectGames = require('./lib/rejectGames.json')
 var sortArray = require('sort-array')
 var datfile = require('robloach-datfile')
+const download = require('download')
 
-// Options for reading the dat file.
-let opts = {
-	ignoreHeader: true
+async function downloadFile() {
+	if (!fs.existsSync('TDC_Daily.dat')) {
+		const downloadOpts = {
+			extract: true,
+			filename: 'TDC_Daily.dat'
+		}
+		await download('http://www.totaldoscollection.org/nugnugnug/tdc_daily.zip', '.', downloadOpts)
+	}
 }
 
-// Parse the TDC.dat file.
-datfile.parseFile('TDC.dat', opts).then(function (dat) {
-	let database = []
-	for (let i in dat) {
-		let game = dat[i]
-		let finalFile = null
-		if (!acceptableGame(game)) {
-			continue
-		}
-		for (let i in game.entries || []) {
-			let file = game.entries[i]
-			let cleanFilename = acceptableFile(file)
-			if (cleanFilename) {
-				file.cleanFilename = cleanFilename
-				finalFile = file
-			}
-		}
-		if (finalFile) {
-			finalFile.meta = getMetadata(game)
-			database.push({
-				name: cleanGameName(game.name),
-				filename: finalFile.cleanFilename,
-				size: finalFile.size,
-				crc: finalFile.crc.toLowerCase(),
-				meta: finalFile.meta
-			})
-		}
+async function goTime() {
+
+	await downloadFile()
+	// Options for reading the dat file.
+	let opts = {
+		ignoreHeader: true
 	}
 
-	// Sort the database.
-	database = sortArray(database, ['name', 'rom.crc'])
+	// Parse the TDC.dat file.
+	datfile.parseFile('TDC_Daily.dat', opts).then(function (dat) {
+		let database = []
+		for (let i in dat) {
+			let game = dat[i]
+			let finalFile = null
+			if (!acceptableGame(game)) {
+				continue
+			}
+			for (let i in game.entries || []) {
+				let file = game.entries[i]
+				let cleanFilename = acceptableFile(file)
+				if (cleanFilename) {
+					file.cleanFilename = cleanFilename
+					finalFile = file
+				}
+			}
+			if (finalFile) {
+				finalFile.meta = getMetadata(game)
+				database.push({
+					name: cleanGameName(game.name),
+					filename: finalFile.cleanFilename,
+					size: finalFile.size,
+					crc: finalFile.crc.toLowerCase(),
+					meta: finalFile.meta
+				})
+			}
+		}
 
-	// Output the new DAT.
-	var pkg = require('./package.json')
-	var output = `clrmamepro (
+		// Sort the database.
+		database = sortArray(database, ['name', 'rom.crc'])
+
+		// Output the new DAT.
+		var pkg = require('./package.json')
+		var output = `clrmamepro (
 	name "DOS"
 	description "DOS"
 	version ${pkg.version}
@@ -54,27 +68,28 @@ datfile.parseFile('TDC.dat', opts).then(function (dat) {
 )
 `
 
-	for (let i in database) {
-		let game = database[i]
-		let meta = ''
-		for (let metaEntry in game.meta) {
-			meta += `\n\t${metaEntry} "${game.meta[metaEntry]}"`
-		}
-		output += `
+		for (let i in database) {
+			let game = database[i]
+			let meta = ''
+			for (let metaEntry in game.meta) {
+				meta += `\n\t${metaEntry} "${game.meta[metaEntry]}"`
+			}
+			output += `
 game (
 	name "${game.name}"
 	description "${game.name}"${meta}
 	rom ( name "${game.filename}" size ${game.size} crc ${game.crc} )
 )
 `
-	}
+		}
 
-	// Save the file.
-	fs.writeFileSync('libretro-database/dat/DOS.dat', output)
-}).catch(function (err) {
-	// Output any errors.
-	console.error(err)
-})
+		// Save the file.
+		fs.writeFileSync('libretro-database/dat/DOS.dat', output)
+	}).catch(function (err) {
+		// Output any errors.
+		console.error(err)
+	})
+}
 
 /**
  * Checks to see if the given file is an acceptable game to index.
@@ -234,3 +249,5 @@ function replaceAll(str, find, replace) {
 		return str
 	}
 }
+
+goTime()

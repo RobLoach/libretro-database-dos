@@ -6,8 +6,10 @@ Builds [libretro-database's DOS.dat](https://github.com/libretro/libretro-databa
 
 ## Build
 
-1. Retrieve the latest TDC DAT
-2. Save it as TDC.dat
-3. Run `npm install`
-4. Run `npm test`
-5. See the output at [DOS.dat](DOS.dat)
+```
+git submodule update --init`
+npm install
+npm test
+```
+
+See the output at [DOS.dat](DOS.dat)
