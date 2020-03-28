@@ -121,6 +121,13 @@ function acceptableFile(file) {
 		}
 
 		var name = pathObject.name.toLowerCase()
+
+		// Reject setup or install files.
+		if (name.includes('setup') || name.includes('install')) {
+			return false
+		}
+
+		// Check against the rejected names.
 		if (rejectNames.indexOf(name) >= 0) {
 			return false
 		}
