@@ -22,8 +22,8 @@
   },
   "homepage": "https://github.com/robloach/libretro-database-dos",
   "dependencies": {
-    "download": "^7.1.0",
+    "download": "^8.0.0",
     "robloach-datfile": "^2.2.0",
-    "sort-array": "^4.1.0"
+    "sort-array": "^4.1.1"
   }
 }

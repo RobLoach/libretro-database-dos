@@ -144,6 +144,9 @@ function cleanGameName(name) {
 	// Remove the suffixing file extension.
 	output = name.replace('.zip"', '')
 
+	// Remove an entry that breaks brackets.
+	output = output.replace('(Interactive Television Entertainment)', '')
+
 	// Remove all [] data.
 	output = output.replace(/\[.*?\]/g, '')
 
@@ -190,6 +193,7 @@ function cleanGameName(name) {
 		.replace('\\2017\\', '')
 		.replace('\\2018\\', '')
 		.replace('\\2019\\', '')
+		.replace('\\2020\\', '')
 
 	// Remove the company.
 	if (output.indexOf('(') >= 0) {
