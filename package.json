@@ -1,6 +1,6 @@
 {
   "name": "libretro-database-dos",
-  "version": "2022.10.28",
+  "version": "2023.5.15",
   "private": true,
   "description": "DOS.dat for libretro-database",
   "main": "index.js",
@@ -23,7 +23,7 @@
   "homepage": "https://github.com/robloach/libretro-database-dos",
   "dependencies": {
     "download": "^8.0.0",
-    "robloach-datfile": "^2.3.0",
-    "sort-array": "^4.1.4"
+    "robloach-datfile": "^2.4.0",
+    "sort-array": "^4.1.5"
   }
 }
