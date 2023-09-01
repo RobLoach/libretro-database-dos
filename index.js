@@ -123,7 +123,17 @@ function acceptableFile(file) {
 		var name = pathObject.name.toLowerCase()
 
 		// Reject setup or install files.
-		if (name.includes('setup') || name.includes('install') || name.includes('Crack]')) {
+		let skipEntries = name.includes('setup') ||
+			name.includes('install') ||
+			name.includes('Crack]') ||
+			name.includes('[Codes]') ||
+			name.includes('[Solve]') ||
+			name.includes('[Documentation]') ||
+			name.includes('[Manual]') ||
+			name.includes('Docs]') ||
+			name.includes('[Walkthrough]') ||
+			name.includes('[Hints]')
+		if (skipEntries) {
 			return false
 		}
 
