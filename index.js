@@ -77,7 +77,7 @@ async function goTime() {
 			output += `
 game (
 	name "${game.name}"
-	description "${game.name}"${meta}
+	description "${game.name.replace(/\([\d\d\d\d]+\)/gm, '').trim()}"${meta}
 	rom ( name "${game.filename}" size ${game.size} crc ${game.crc} )
 )
 `
@@ -123,7 +123,7 @@ function acceptableFile(file) {
 		var name = pathObject.name.toLowerCase()
 
 		// Reject setup or install files.
-		if (name.includes('setup') || name.includes('install')) {
+		if (name.includes('setup') || name.includes('install') || name.includes('Crack]')) {
 			return false
 		}
 
@@ -142,7 +142,7 @@ function acceptableFile(file) {
  */
 function cleanGameName(name) {
 	// Remove the suffixing file extension.
-	output = name.replace('.zip"', '')
+	let output = name.replace('.zip', '')
 
 	// Remove an entry that breaks brackets.
 	output = output.replace('(Interactive Television Entertainment)', '')
@@ -150,64 +150,19 @@ function cleanGameName(name) {
 	// Remove all [] data.
 	output = output.replace(/\[.*?\]/g, '')
 
-	// Remove the year.
-	output = output.replace(/\(\d\d\d\d\)/g, '')
+	// Remove all languages. (En)(It)
+	//output = output.replace(/(\(..\))/gm, '')
 
-	output = output
-		.replace('\\1981\\', '')
-		.replace('\\1982\\', '')
-		.replace('\\1983\\', '')
-		.replace('\\1984\\', '')
-		.replace('\\1985\\', '')
-		.replace('\\1986\\', '')
-		.replace('\\1987\\', '')
-		.replace('\\1988\\', '')
-		.replace('\\1989\\', '')
-		.replace('\\1990\\', '')
-		.replace('\\1991\\', '')
-		.replace('\\1992\\', '')
-		.replace('\\1993\\', '')
-		.replace('\\1994\\', '')
-		.replace('\\1995\\', '')
-		.replace('\\1996\\', '')
-		.replace('\\1997\\', '')
-		.replace('\\1998\\', '')
-		.replace('\\1999\\', '')
-		.replace('\\2000\\', '')
-		.replace('\\2001\\', '')
-		.replace('\\2002\\', '')
-		.replace('\\2003\\', '')
-		.replace('\\2004\\', '')
-		.replace('\\2005\\', '')
-		.replace('\\2006\\', '')
-		.replace('\\2007\\', '')
-		.replace('\\2008\\', '')
-		.replace('\\2009\\', '')
-		.replace('\\2010\\', '')
-		.replace('\\2011\\', '')
-		.replace('\\2012\\', '')
-		.replace('\\2013\\', '')
-		.replace('\\2014\\', '')
-		.replace('\\2015\\', '')
-		.replace('\\2016\\', '')
-		.replace('\\2017\\', '')
-		.replace('\\2018\\', '')
-		.replace('\\2019\\', '')
-		.replace('\\2020\\', '')
-
-	// Remove the company.
-	if (output.indexOf('(') >= 0) {
-		output = output.slice(0, output.lastIndexOf('('))
-	}
-
-	// Remove all () data.
-	//output = output.replace(/\(.*?\)/g, '')
+	// Remove all () data, except year
+	output = output.replace(/\([^\d\d\d\d]+\)/gm, '')
 
 	// Remove the version.
 	var ver = output.match(/ v[0-9.]{3,9}/g)
 	if (ver && ver[0]) {
 		output = output.replace(ver[0], '')
 	}
+
+	output = output.replaceAll('"', '')
 
 	// Replace any double spaces with a single space.
 	output = output.split('  ').join(' ')
@@ -232,18 +187,28 @@ function getMetadata(game) {
 		'Trainer': 'Trainer'
 	}
 	for (let genre in genres) {
-		if (name.search(genre) > 3) {
+		if (name.indexOf('[' + genre + ']') > 3) {
 			meta.genre = genres[genre]
 			break
 		}
 	}
 
-	let currentYear = (new Date()).getFullYear()
-	for (let i = 1980; i < currentYear; i++) {
-		if (name.search('(' + i + ')') > 3) {
+	for (let i = 1980; i < 2030; i++) {
+		if (name.indexOf('(' + i + ')') > 3) {
 			meta.year = i
 			break
 		}
+	}
+
+	// TODO: Find languages
+	//name.search(output.replace(/(\(..\))/gm, '')
+
+	// Find the developer
+	let companyNumber = 0
+	let match = name.match(/\([a-zA-Z\s,.]{3,}\)/gm)
+	if (match) {
+		let companyName = match[0]
+		meta.developer = companyName.replaceAll('(', '').replaceAll(')', '')
 	}
 
 	return meta
