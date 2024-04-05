@@ -55,7 +55,9 @@ async function goTime() {
 		}
 
 		// Sort the database.
-		database = sortArray(database, ['name', 'rom.crc'])
+		database = sortArray(database, {
+			by: 'name'
+		})
 
 		// Output the new DAT.
 		var pkg = require('./package.json')
