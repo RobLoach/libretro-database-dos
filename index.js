@@ -8,10 +8,10 @@ var datfile = require('robloach-datfile')
 const download = require('download')
 
 async function downloadFile() {
-	if (!fs.existsSync('TDC_Daily.dat')) {
+	if (!fs.existsSync('tdc_daily.dat')) {
 		const downloadOpts = {
 			extract: true,
-			filename: 'TDC_Daily.dat'
+			filename: 'tdc_daily.dat'
 		}
 		await download('http://www.totaldoscollection.org/nugnugnug/tdc_daily.zip', '.', downloadOpts)
 	}
@@ -26,7 +26,7 @@ async function goTime() {
 	}
 
 	// Parse the TDC.dat file.
-	datfile.parseFile('TDC_Daily.dat', opts).then(function (dat) {
+	datfile.parseFile('tdc_daily.dat', opts).then(function (dat) {
 		let database = []
 		for (let i in dat) {
 			let game = dat[i]

@@ -16,6 +16,7 @@
 	"linstall",
 	"csetup",
 	"dossetup",
+	"sounddrv",
 	"pwsetup",
 	"readthis",
 	"setuphd",
