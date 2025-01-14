@@ -160,6 +160,7 @@ function cleanGameName(name) {
 	output = output.replace('(Interactive Television Entertainment)', '')
 
 	// Remove all [] data.
+	// TODO: Capture any other metadata?
 	output = output.replace(/\[.*?\]/g, '')
 
 	// Remove all languages. (En)(It)
@@ -177,7 +178,7 @@ function cleanGameName(name) {
 	output = output.replaceAll('"', '')
 
 	// Replace any double spaces with a single space.
-	output = output.split('  ').join(' ')
+	output = output.replaceAll('  ', ' ')
 
 	return output.trim()
 }
@@ -190,8 +191,12 @@ function getMetadata(game) {
 	let name = game.name
 	let genres = {
 		'Action': 'Action',
+		'Fighting': 'Fighting',
+		'Pinball': 'Pinball',
 		'Adventure': 'Adventure',
 		'Strategy': 'Strategy',
+		'Shooter': 'Shooter',
+		'Educational': 'Educational',
 		'Sports': 'Sports',
 		'Role-Playing (RPG)': 'RPG',
 		'Educational': 'Educational',
