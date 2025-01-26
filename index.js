@@ -78,8 +78,7 @@ async function goTime() {
 			}
 			output += `
 game (
-	name "${game.name}"
-	description "${game.name.replace(/\([\d\d\d\d]+\)/gm, '').trim()}"${meta}
+	name "${game.name}"${meta}
 	rom ( name "${game.filename}" size ${game.size} crc ${game.crc} )
 )
 `
@@ -210,9 +209,9 @@ function getMetadata(game) {
 		}
 	}
 
-	for (let i = 1980; i < 2030; i++) {
+	for (let i = 1960; i < 2030; i++) {
 		if (name.indexOf('(' + i + ')') > 3) {
-			meta.year = i
+			meta.releaseyear = i
 			break
 		}
 	}
