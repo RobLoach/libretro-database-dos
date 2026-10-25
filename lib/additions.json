@@ -1,0 +1,35 @@
+[
+	{
+		"name": "Richman",
+		"filename": "DFW.EXE",
+		"size": 151206,
+		"crc": "9014D48F",
+		"meta": {
+			"genre": "Strategy",
+			"releaseyear": "1989",
+			"developer": "Softstar"
+		}
+	},
+	{
+		"name": "Richman 2",
+		"filename": "SS.EXE",
+		"size": 43867,
+		"crc": "C840918A",
+		"meta": {
+			"genre": "Strategy",
+			"releaseyear": "1993",
+			"developer": "Softstar"
+		}
+	},
+	{
+		"name": "Richman 3",
+		"filename": "SS.EXE",
+		"size": 51950,
+		"crc": "89CCEFBD",
+		"meta": {
+			"genre": "Strategy",
+			"releaseyear": "1996",
+			"developer": "Softstar"
+		}
+	}
+]
