@@ -18,6 +18,9 @@ const releasePattern = /\((\d{4}|\d{3}x|\d{2}xx)(?:-\d\d){0,2}\)\s*\(((?:[^()]|\
 // Company suffixes, like the ", Inc." in "Electronic Arts, Inc." or the " Co., Ltd." in "KOEI Co., Ltd.".
 const companySuffix = /,?\s+(?:Co\.,?\s*|Pty\.?\s+)?(?:Inc|Ltd)\.?(?=,|$)/gi
 
+// The commas between multiple publishers, but not the ones before suffixes like ", S.A." or ", The".
+const publisherSeparator = /,\s+(?!(?:Inc|Ltd|LLC|L\.L\.C|L\.P|S\.A|S\.L|Jr|Incorporated|The)\.?(?:,|$))/
+
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 const tdcUrl = 'http://www.totaldoscollection.org/nugnugnug/tdc_daily.zip'
@@ -361,9 +364,9 @@ function cleanGameName(name) {
 function getMetadata(name) {
 	const meta = {}
 
-	const genre = getTags(name).find(tag => Object.hasOwn(genres, tag))
-	if (genre) {
-		meta.genre = genres[genre]
+	const genre = new Set(getTags(name).filter(tag => Object.hasOwn(genres, tag)).map(tag => genres[tag]))
+	if (genre.size) {
+		meta.genre = [...genre].join(' / ')
 	}
 
 	const release = name.match(releasePattern)
@@ -373,7 +376,8 @@ function getMetadata(name) {
 		}
 		const developer = release[2].replaceAll('"', '').trim()
 		if (developer && developer !== '-') {
-			meta.developer = Object.hasOwn(developers, developer) ? developers[developer] : developer.replace(companySuffix, '')
+			const names = (Object.hasOwn(developers, developer) ? [developer] : developer.split(publisherSeparator)).map(value => Object.hasOwn(developers, value) ? developers[value] : value.replace(companySuffix, ''))
+			meta.developer = [...new Set(names)].join(' / ')
 		}
 	}
 
