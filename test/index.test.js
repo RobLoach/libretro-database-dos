@@ -41,13 +41,13 @@ test('getMetadata', () => {
 		developer: 'MIR Game & Communication'
 	})
 	assert.deepStrictEqual(getMetadata('Hugo (De) (1995)(ITE Media ApS (Interactive Television Entertainment)) [Racing - Driving, Action].zip'), {
-		genre: 'Racing',
+		genre: 'Racing / Action',
 		releaseyear: '1995',
 		developer: 'ITE Media ApS (Interactive Television Entertainment)'
 	})
 	assert.deepStrictEqual(getMetadata('Might and Magic III (1991)(New World Computing, Inc.) [Role-Playing (RPG)].zip').developer, 'New World Computing')
 	assert.deepStrictEqual(getMetadata('Nobunaga\'s Ambition (1988)(KOEI Co., Ltd.) [Strategy].zip').developer, 'KOEI')
-	assert.deepStrictEqual(getMetadata('Dark Sun- Wake of the Ravager (1995)(Mindscape, Inc., Strategic Simulations, Inc.) [Role-Playing (RPG)].zip').developer, 'Mindscape, Strategic Simulations')
+	assert.deepStrictEqual(getMetadata('Dark Sun- Wake of the Ravager (1995)(Mindscape, Inc., Strategic Simulations, Inc.) [Role-Playing (RPG)].zip').developer, 'Mindscape / Strategic Simulations')
 	assert.deepStrictEqual(getMetadata('Heroes of Jin Yong (1996)(Tan Ton Nerw Information Co.,Ltd.) [Role-Playing (RPG)].zip').developer, 'Tan Ton Nerw Information')
 	assert.deepStrictEqual(getMetadata('Incredible Machine, The (1993)(Incentive Software) [Puzzle].zip').developer, 'Incentive Software')
 	assert.deepStrictEqual(getMetadata('Bomberman (1990)(Hudson Soft Company, Ltd.) [Action].zip').developer, 'Hudson Soft')
@@ -57,6 +57,23 @@ test('getMetadata', () => {
 		developer: 'Micro-Ware'
 	})
 	assert.deepStrictEqual(getMetadata('Unknown Game [SW]'), {})
+})
+
+test('getMetadata splits multiple values with " / "', () => {
+	assert.deepStrictEqual(getMetadata('Game (1994)(Foo) [Action, Sports, Action].zip').genre, 'Action / Sports')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Foo) [Racing - Driving, Racing].zip').genre, 'Racing')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Foo) [Chess, Board, Cards].zip').genre, 'Board / Card')
+	assert.deepStrictEqual(getMetadata('Game (1994)(GameTek, IJE) [Action].zip').developer, 'GameTek / IJE')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Hudson Soft Company, Ltd., Electronic Arts, Inc.) [Action].zip').developer, 'Hudson Soft / Electronic Arts')
+	assert.deepStrictEqual(getMetadata('Game (1994)(KOEI Co., Ltd., Big Games) [Action].zip').developer, 'KOEI / Big Games')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Erbe Software, S.A., Lucasfilm Games LLC) [Action].zip').developer, 'Erbe Software, S.A. / Lucasfilm Games LLC')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Electronic Arts, The Software Toolworks) [Action].zip').developer, 'Electronic Arts / The Software Toolworks')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Coca-Cola Company, The) [Action].zip').developer, 'Coca-Cola Company, The')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Arthur Wells, Jr.) [Action].zip').developer, 'Arthur Wells, Jr.')
+	assert.deepStrictEqual(getMetadata('Game (1994)(8-Bit Productions, LLC.) [Action].zip').developer, '8-Bit Productions, LLC.')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Davidson & Associates) [Action].zip').developer, 'Davidson & Associates')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Polarware - Penguin Software) [Action].zip').developer, 'Polarware - Penguin Software')
+	assert.deepStrictEqual(getMetadata('Game (1994)(Big Games, Big Games, Inc.) [Action].zip').developer, 'Big Games')
 })
 
 test('getTags', () => {
